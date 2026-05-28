@@ -9,8 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PendaftaranRouteImport } from './routes/pendaftaran'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as InformasiRouteImport } from './routes/informasi'
 import { Route as IndexRouteImport } from './routes/index'
 
+const PendaftaranRoute = PendaftaranRouteImport.update({
+  id: '/pendaftaran',
+  path: '/pendaftaran',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InformasiRoute = InformasiRouteImport.update({
+  id: '/informasi',
+  path: '/informasi',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +37,61 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/informasi': typeof InformasiRoute
+  '/login': typeof LoginRoute
+  '/pendaftaran': typeof PendaftaranRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/informasi': typeof InformasiRoute
+  '/login': typeof LoginRoute
+  '/pendaftaran': typeof PendaftaranRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/informasi': typeof InformasiRoute
+  '/login': typeof LoginRoute
+  '/pendaftaran': typeof PendaftaranRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/informasi' | '/login' | '/pendaftaran'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/informasi' | '/login' | '/pendaftaran'
+  id: '__root__' | '/' | '/informasi' | '/login' | '/pendaftaran'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  InformasiRoute: typeof InformasiRoute
+  LoginRoute: typeof LoginRoute
+  PendaftaranRoute: typeof PendaftaranRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/pendaftaran': {
+      id: '/pendaftaran'
+      path: '/pendaftaran'
+      fullPath: '/pendaftaran'
+      preLoaderRoute: typeof PendaftaranRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/informasi': {
+      id: '/informasi'
+      path: '/informasi'
+      fullPath: '/informasi'
+      preLoaderRoute: typeof InformasiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +104,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  InformasiRoute: InformasiRoute,
+  LoginRoute: LoginRoute,
+  PendaftaranRoute: PendaftaranRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
