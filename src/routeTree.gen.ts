@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PendaftaranRouteImport } from './routes/pendaftaran'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InformasiRouteImport } from './routes/informasi'
 import { Route as IndexRouteImport } from './routes/index'
 
+const PendaftaranRoute = PendaftaranRouteImport.update({
+  id: '/pendaftaran',
+  path: '/pendaftaran',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/informasi': typeof InformasiRoute
   '/login': typeof LoginRoute
+  '/pendaftaran': typeof PendaftaranRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/informasi': typeof InformasiRoute
   '/login': typeof LoginRoute
+  '/pendaftaran': typeof PendaftaranRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/informasi': typeof InformasiRoute
   '/login': typeof LoginRoute
+  '/pendaftaran': typeof PendaftaranRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/informasi' | '/login'
+  fullPaths: '/' | '/informasi' | '/login' | '/pendaftaran'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/informasi' | '/login'
-  id: '__root__' | '/' | '/informasi' | '/login'
+  to: '/' | '/informasi' | '/login' | '/pendaftaran'
+  id: '__root__' | '/' | '/informasi' | '/login' | '/pendaftaran'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   InformasiRoute: typeof InformasiRoute
   LoginRoute: typeof LoginRoute
+  PendaftaranRoute: typeof PendaftaranRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/pendaftaran': {
+      id: '/pendaftaran'
+      path: '/pendaftaran'
+      fullPath: '/pendaftaran'
+      preLoaderRoute: typeof PendaftaranRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   InformasiRoute: InformasiRoute,
   LoginRoute: LoginRoute,
+  PendaftaranRoute: PendaftaranRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
