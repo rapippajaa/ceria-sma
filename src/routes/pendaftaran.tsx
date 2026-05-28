@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { useState } from "react";
-import { Check, ChevronLeft, ChevronRight, User, Users, Upload, ClipboardCheck, CheckCircle2 } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, User, Users, Upload, ClipboardCheck, CheckCircle2, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/pendaftaran")({
   head: () => ({
@@ -48,11 +49,47 @@ function Pendaftaran() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<FormData>(initial);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [nomor, setNomor] = useState<string | null>(null);
 
   const update = (k: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setData((d) => ({ ...d, [k]: e.target.value }));
 
   const progress = (step / steps.length) * 100;
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    setError(null);
+    const { data: row, error: err } = await supabase
+      .from("pendaftaran")
+      .insert({
+        nama: data.nama,
+        nisn: data.nisn,
+        tempat_lahir: data.tempatLahir || null,
+        tgl_lahir: data.tglLahir || null,
+        jenis_kelamin: data.jk || null,
+        alamat: data.alamat || null,
+        nama_ayah: data.namaAyah || null,
+        nama_ibu: data.namaIbu || null,
+        pekerjaan_ayah: data.pekerjaanAyah || null,
+        pekerjaan_ibu: data.pekerjaanIbu || null,
+        no_hp: data.noHp || null,
+        ijazah: data.ijazah || null,
+        akta: data.akta || null,
+        kk: data.kk || null,
+        foto: data.foto || null,
+      })
+      .select("nomor_pendaftaran")
+      .single();
+    setSubmitting(false);
+    if (err) {
+      setError(err.message);
+      return;
+    }
+    setNomor(row?.nomor_pendaftaran ?? null);
+    setSubmitted(true);
+  };
 
   if (submitted) {
     return (
@@ -64,8 +101,14 @@ function Pendaftaran() {
           <h1 className="text-3xl font-bold text-foreground">Pendaftaran Berhasil!</h1>
           <p className="mt-3 text-muted-foreground">
             Terima kasih, <span className="font-semibold text-foreground">{data.nama || "Calon Murid"}</span>.
-            Nomor pendaftaran Anda akan dikirim via email. Pantau status melalui menu Login.
           </p>
+          {nomor && (
+            <div className="mt-6 inline-block rounded-lg border border-primary/30 bg-primary/5 px-6 py-4">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">Nomor Pendaftaran</p>
+              <p className="mt-1 text-2xl font-bold text-primary">{nomor}</p>
+            </div>
+          )}
+          <p className="mt-6 text-sm text-muted-foreground">Simpan nomor pendaftaran Anda untuk memantau status seleksi.</p>
         </div>
       </SiteLayout>
     );
@@ -230,13 +273,15 @@ function Pendaftaran() {
             ) : (
               <button
                 type="button"
-                onClick={() => setSubmitted(true)}
-                className="inline-flex items-center gap-1 rounded-md bg-[var(--gradient-primary)] px-5 py-2 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-elegant)] transition-transform hover:scale-[1.02]"
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="inline-flex items-center gap-1 rounded-md bg-[var(--gradient-primary)] px-5 py-2 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-elegant)] transition-transform hover:scale-[1.02] disabled:opacity-60"
               >
-                Kirim Pendaftaran <Check className="h-4 w-4" />
+                {submitting ? (<><Loader2 className="h-4 w-4 animate-spin" /> Mengirim...</>) : (<>Kirim Pendaftaran <Check className="h-4 w-4" /></>)}
               </button>
             )}
           </div>
+          {error && <p className="mt-4 text-sm text-destructive">Gagal mengirim: {error}</p>}
         </div>
       </div>
     </SiteLayout>
