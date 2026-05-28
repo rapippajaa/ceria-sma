@@ -14,7 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      pendaftaran: {
+        Row: {
+          akta: string | null
+          alamat: string | null
+          created_at: string
+          foto: string | null
+          id: string
+          ijazah: string | null
+          jenis_kelamin: string | null
+          kk: string | null
+          nama: string
+          nama_ayah: string | null
+          nama_ibu: string | null
+          nisn: string
+          no_hp: string | null
+          nomor_pendaftaran: string
+          pekerjaan_ayah: string | null
+          pekerjaan_ibu: string | null
+          tempat_lahir: string | null
+          tgl_lahir: string | null
+        }
+        Insert: {
+          akta?: string | null
+          alamat?: string | null
+          created_at?: string
+          foto?: string | null
+          id?: string
+          ijazah?: string | null
+          jenis_kelamin?: string | null
+          kk?: string | null
+          nama: string
+          nama_ayah?: string | null
+          nama_ibu?: string | null
+          nisn: string
+          no_hp?: string | null
+          nomor_pendaftaran?: string
+          pekerjaan_ayah?: string | null
+          pekerjaan_ibu?: string | null
+          tempat_lahir?: string | null
+          tgl_lahir?: string | null
+        }
+        Update: {
+          akta?: string | null
+          alamat?: string | null
+          created_at?: string
+          foto?: string | null
+          id?: string
+          ijazah?: string | null
+          jenis_kelamin?: string | null
+          kk?: string | null
+          nama?: string
+          nama_ayah?: string | null
+          nama_ibu?: string | null
+          nisn?: string
+          no_hp?: string | null
+          nomor_pendaftaran?: string
+          pekerjaan_ayah?: string | null
+          pekerjaan_ibu?: string | null
+          tempat_lahir?: string | null
+          tgl_lahir?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
