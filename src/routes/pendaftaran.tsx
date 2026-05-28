@@ -200,30 +200,23 @@ function Pendaftaran() {
 
           {step === 3 && (
             <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">Unggah berkas dalam format PDF/JPG (maks. 2MB per file).</p>
-              {[
-                { k: "ijazah", l: "Ijazah / SKL SMP" },
-                { k: "akta", l: "Akta Kelahiran" },
-                { k: "kk", l: "Kartu Keluarga" },
-                { k: "foto", l: "Pas Foto 3x4" },
-              ].map((f) => (
-                <div key={f.k} className="flex items-center justify-between rounded-lg border border-dashed border-border bg-secondary/30 p-4">
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{f.l}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {data[f.k as keyof FormData] ? `Terpilih: ${data[f.k as keyof FormData]}` : "Belum ada file"}
-                    </p>
-                  </div>
-                  <label className="cursor-pointer rounded-md border border-primary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
-                    Pilih File
-                    <input
-                      type="file"
-                      className="hidden"
-                      onChange={(e) => setData((d) => ({ ...d, [f.k]: e.target.files?.[0]?.name ?? "" }))}
-                    />
-                  </label>
-                </div>
-              ))}
+              <p className="text-sm text-muted-foreground">Unggah berkas yang diminta. File akan tersimpan dengan aman.</p>
+              <FileUpload
+                label="Pas Foto 3x4"
+                hint="Format JPG/PNG, maks. 2MB"
+                accept="image/jpeg,image/png"
+                maxMB={2}
+                value={data.foto}
+                onChange={(url) => setData((d) => ({ ...d, foto: url }))}
+              />
+              <FileUpload
+                label="Scan Ijazah / SKHUN"
+                hint="Format PDF/JPG, maks. 5MB"
+                accept="application/pdf,image/jpeg"
+                maxMB={5}
+                value={data.ijazah}
+                onChange={(url) => setData((d) => ({ ...d, ijazah: url }))}
+              />
             </div>
           )}
 
