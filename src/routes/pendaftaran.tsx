@@ -200,30 +200,23 @@ function Pendaftaran() {
 
           {step === 3 && (
             <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">Unggah berkas dalam format PDF/JPG (maks. 2MB per file).</p>
-              {[
-                { k: "ijazah", l: "Ijazah / SKL SMP" },
-                { k: "akta", l: "Akta Kelahiran" },
-                { k: "kk", l: "Kartu Keluarga" },
-                { k: "foto", l: "Pas Foto 3x4" },
-              ].map((f) => (
-                <div key={f.k} className="flex items-center justify-between rounded-lg border border-dashed border-border bg-secondary/30 p-4">
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{f.l}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {data[f.k as keyof FormData] ? `Terpilih: ${data[f.k as keyof FormData]}` : "Belum ada file"}
-                    </p>
-                  </div>
-                  <label className="cursor-pointer rounded-md border border-primary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
-                    Pilih File
-                    <input
-                      type="file"
-                      className="hidden"
-                      onChange={(e) => setData((d) => ({ ...d, [f.k]: e.target.files?.[0]?.name ?? "" }))}
-                    />
-                  </label>
-                </div>
-              ))}
+              <p className="text-sm text-muted-foreground">Unggah berkas yang diminta. File akan tersimpan dengan aman.</p>
+              <FileUpload
+                label="Pas Foto 3x4"
+                hint="Format JPG/PNG, maks. 2MB"
+                accept="image/jpeg,image/png"
+                maxMB={2}
+                value={data.foto}
+                onChange={(url) => setData((d) => ({ ...d, foto: url }))}
+              />
+              <FileUpload
+                label="Scan Ijazah / SKHUN"
+                hint="Format PDF/JPG, maks. 5MB"
+                accept="application/pdf,image/jpeg"
+                maxMB={5}
+                value={data.ijazah}
+                onChange={(url) => setData((d) => ({ ...d, ijazah: url }))}
+              />
             </div>
           )}
 
@@ -306,6 +299,89 @@ function Field({
         {label} {required && <span className="text-destructive">*</span>}
       </label>
       <input type={type} value={value} onChange={onChange} className={inputCls} />
+    </div>
+  );
+}
+
+function FileUpload({
+  label, hint, accept, maxMB, value, onChange,
+}: {
+  label: string;
+  hint: string;
+  accept: string;
+  maxMB: number;
+  value: string;
+  onChange: (url: string) => void;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const allowed = accept.split(",").map((s) => s.trim());
+  const isImage = value && /\.(png|jpe?g)$/i.test(value);
+  const isPdf = value && /\.pdf$/i.test(value);
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    setErr(null);
+    if (!allowed.includes(file.type)) {
+      setErr(`Format tidak didukung. Hanya: ${allowed.join(", ")}`);
+      return;
+    }
+    if (file.size > maxMB * 1024 * 1024) {
+      setErr(`Ukuran melebihi ${maxMB}MB.`);
+      return;
+    }
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage.from("berkas-ppdb").upload(path, file, {
+      contentType: file.type,
+      upsert: false,
+    });
+    if (error) {
+      setErr(error.message);
+      setUploading(false);
+      return;
+    }
+    const { data: pub } = supabase.storage.from("berkas-ppdb").getPublicUrl(path);
+    onChange(pub.publicUrl);
+    setUploading(false);
+  };
+
+  return (
+    <div className="rounded-lg border border-dashed border-border bg-secondary/30 p-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-foreground">{label}</p>
+          <p className="text-xs text-muted-foreground">{hint}</p>
+          {value && !uploading && (
+            <p className="mt-1 truncate text-xs text-primary">✓ Terunggah</p>
+          )}
+        </div>
+        <label className={`shrink-0 cursor-pointer rounded-md border border-primary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground ${uploading ? "pointer-events-none opacity-60" : ""}`}>
+          {uploading ? (
+            <span className="inline-flex items-center gap-1.5"><Loader2 className="h-4 w-4 animate-spin" /> Mengunggah...</span>
+          ) : value ? "Ganti File" : "Pilih File"}
+          <input type="file" accept={accept} className="hidden" onChange={handleFile} disabled={uploading} />
+        </label>
+      </div>
+      {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
+      {value && !uploading && (
+        <div className="mt-3">
+          {isImage && (
+            <img src={value} alt={label} className="max-h-40 rounded-md border border-border object-contain" />
+          )}
+          {isPdf && (
+            <a href={value} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-secondary">
+              📄 Lihat PDF
+            </a>
+          )}
+          {!isImage && !isPdf && (
+            <a href={value} target="_blank" rel="noreferrer" className="text-xs text-primary underline">Lihat file</a>
+          )}
+        </div>
+      )}
     </div>
   );
 }
