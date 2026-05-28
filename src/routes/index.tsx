@@ -24,10 +24,10 @@ function Home() {
             <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
               <GraduationCap className="h-4 w-4" /> Tahun Ajaran 2026/2027
             </span>
-            <h1 className="mt-6 text-4xl font-bold leading-tight md:text-6xl">
+            <h1 className="mt-6 text-4xl font-bold leading-tight text-[oklch(0.06_0.02_250)] md:text-6xl">
               Bergabunglah Bersama Calon Pemimpin Masa Depan
             </h1>
-            <p className="mt-4 text-lg text-white/85 md:text-xl">
+            <p className="mt-4 text-lg text-[oklch(0.06_0.02_250)] md:text-xl">
               Sistem Pendaftaran Murid Baru (SPMB) online untuk SMA. Cepat, transparan, dan dapat diakses kapan saja.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -39,7 +39,7 @@ function Home() {
               </Link>
               <Link
                 to="/informasi"
-                className="inline-flex items-center rounded-md border border-white/40 px-6 py-3 font-medium text-white transition-colors hover:bg-white/10"
+                className="inline-flex items-center rounded-md border border-white/40 px-6 py-3 font-medium text-[oklch(0.06_0.02_250)] transition-colors hover:bg-white/10"
               >
                 Lihat Informasi
               </Link>
@@ -70,8 +70,8 @@ function Home() {
       {/* CTA */}
       <section className="mx-auto max-w-6xl px-4 pb-20">
         <div className="rounded-2xl bg-[var(--gradient-primary)] p-10 text-center text-primary-foreground shadow-[var(--shadow-elegant)]">
-          <h2 className="text-3xl font-bold">Siap Memulai Perjalananmu?</h2>
-          <p className="mt-2 text-white/85">Pendaftaran dibuka sampai 31 Juli 2026.</p>
+          <h2 className="text-3xl font-bold text-[oklch(0.06_0.02_250)]">Siap Memulai Perjalananmu?</h2>
+          <p className="mt-2 text-[oklch(0.06_0.02_250)]">Pendaftaran dibuka sampai 31 Juli 2026.</p>
           <Link
             to="/pendaftaran"
             className="mt-6 inline-flex items-center gap-2 rounded-md bg-white px-6 py-3 font-semibold text-primary transition-transform hover:scale-[1.03]"
