@@ -24,7 +24,7 @@ function Home() {
             <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
               <GraduationCap className="h-4 w-4" /> Tahun Ajaran 2026/2027
             </span>
-            <h1 className="mt-6 text-4xl font-bold leading-tight md:text-6xl">
+            <h1 className="mt-6 text-4xl font-bold leading-tight text-[oklch(0.06_0.02_250)] md:text-6xl">
               Bergabunglah Bersama Calon Pemimpin Masa Depan
             </h1>
             <p className="mt-4 text-lg text-white/85 md:text-xl">
