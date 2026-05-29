@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "SMA CERIA" },
+      { name: "description", content: "Web application for new student admissions (SPMB) for high school." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "SMA CERIA" },
+      { property: "og:description", content: "Web application for new student admissions (SPMB) for high school." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "SMA CERIA" },
+      { name: "twitter:description", content: "Web application for new student admissions (SPMB) for high school." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/645723e2-8ad1-43a1-a326-0c93d1ced6a9/id-preview-61349da8--ead11ab9-4a99-4e14-ab55-4000b88cd372.lovable.app-1779995951352.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/645723e2-8ad1-43a1-a326-0c93d1ced6a9/id-preview-61349da8--ead11ab9-4a99-4e14-ab55-4000b88cd372.lovable.app-1779995951352.png" },
     ],
     links: [
       {
